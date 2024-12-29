@@ -1,0 +1,287 @@
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Roboto+Slab&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+:root {
+    font-size: 1vw;
+    --margin-size: 1rem;
+    --back-button-size: 3.5rem;
+    --colour-light-blue: #9dd1ff;
+    --colour-tile-0: #2f9dff;
+    --colour-tile-1: #bbbbbb;
+    --colour-tile-2: #fdff48;
+    --colour-tile-3: #ff48f0;
+    --colour-tile-4: #8e00c6;
+    --colour-unused-tile: rgba(0, 0, 0, 0);
+}
+
+body {
+    background: #eeeeee;
+    overflow: hidden;
+}
+
+h1 {
+    font-family: "Bree Serif", serif;
+    letter-spacing: 0.2rem;
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+p {
+    text-align: justify;
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+}
+
+#background {
+    opacity: 0%;
+    transition: opacity 3s;
+}
+
+.background-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+#background-image-1 {
+    top: 90%;
+    left: 90%;
+}
+
+#background-image-2 {
+    top: 90%;
+    left: 10%;
+}
+
+#background-image-3 {
+    top: 10%;
+    left: 10%;
+}
+
+#background-image-4 {
+    top: 10%;
+    left: 90%;
+}
+
+#reddit-link {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 1rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    background: #ff4600;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: 0.2rem solid #ff4600;
+    border-radius: 1.75rem;
+    float: right;
+    margin-top: 1rem;
+    transition: border 150ms;
+}
+
+#reddit-link:hover {
+    border: 0.2rem solid #fa0000;
+}
+
+.icon {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+}
+
+.standard-link {
+    color: blue;
+}
+
+.bubilee {
+    font-size: 4rem;
+    line-height: 4rem;
+    text-align: center;
+}
+
+.label {
+    font-size: 2rem;
+    font-family: "Roboto Slab", serif;
+    font-weight: 500;
+    line-height: 5rem;
+}
+
+.value {
+    font-size: 4rem;
+    font-family: "Bree Serif", serif;
+    line-height: 5rem;
+}
+
+.pane {
+    display: block;
+}
+
+#left-pane {
+    display: none;
+    position: absolute;
+    top: var(--margin-size);
+    left: var(--margin-size);
+}
+
+#right-pane {
+    text-align: right;
+    position: absolute;
+    top: var(--margin-size);
+    right: var(--margin-size);
+    display: none;
+    grid-template-columns: auto auto;
+    grid-gap: 4rem;
+}
+
+.centre-element {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: fit-content;
+    height: fit-content;
+    transform: translate(-50%, -50%);
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+}
+
+#grid-container {
+    width: 100%;
+    height: 100%;
+}
+
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.number-input {
+    text-align: center;
+    font-size: 1.5rem;
+    display: block;
+    width: 100%;
+    height: 5rem;
+    padding: 0;
+    border: none;
+    background: #eeeeee;
+    margin: none;
+}
+
+#menu-container {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0%;
+    transition: opacity 1s;
+}
+
+#menu {
+    display: block;
+    width: 24rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 3rem;
+    border-radius: 1rem;
+    border: 0.2rem solid #aaaaaa;
+}
+
+#menu-title {
+    margin-bottom: 3rem;
+}
+
+#menu-main {
+    display: block;
+}
+
+.menu-screen {
+    display: none;
+}
+
+.menu-button {
+    display: block;
+    width: 100%;
+    height: 4rem;
+    background: white;
+    border: 0.2rem solid black;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    transition: background 200ms;
+    margin: 1rem 0;
+}
+
+.menu-button:hover {
+    background: var(--colour-light-blue);
+}
+
+#menu-back-button-container {
+    display: block;
+    height: var(--back-button-size);
+    margin-bottom: 1rem;
+}
+
+#menu-back-button {
+    display: none;
+}
+
+.back-button {
+    display: block;
+    width: var(--back-button-size);
+    height: var(--back-button-size);
+    text-align: center;
+    background: none;
+    border-radius: 0.35rem;
+    font-size: 1.5rem;
+    border: 0.2rem solid #aaaaaa;
+    transition: background 200ms;
+}
+
+.back-button:hover {
+    background: var(--colour-light-blue);
+}
+
+.canvas-tile {
+    border-radius: 50%;
+    background: var(--colour-unused-tile);
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    transform: translate(2px, 2px);
+    border: 1px solid black;
+    transition: background 200ms;
+}
+
+.menu-header {
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.two-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+}
+
+.vertical-two-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 1rem;
+}

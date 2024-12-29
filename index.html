@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width"/>
+        <title>Bubilee</title>
+        <link rel="stylesheet" href="/res/style.css" type="text/css" charset="utf-8"/>
+    </head>
+    <body>
+
+        <div id="background">
+            <img id="background-image-1" class="background-image" src="./res/bubilee_1.png"/>
+            <img id="background-image-2" class="background-image" src="./res/bubilee_2.png"/>
+            <img id="background-image-3" class="background-image" src="./res/bubilee_3.png"/>
+            <img id="background-image-4" class="background-image" src="./res/bubilee_4.png"/>
+        </div>
+
+        <div id="left-pane" class="pane">
+            <button class="back-button" onclick="changeToMenu('pause');"><</button>
+        </div>
+
+        <div class="centre-element">
+            <div id="game-container">
+                <div id="grid-container"></div>
+                <canvas id="game-canvas">
+            </div>
+        </div>
+
+        <div id="menu-container">
+
+            <div id="menu-back-button-container">
+                <button id="menu-back-button" class="back-button" onclick="changeToMenu('main');"><</button>
+            </div>
+
+            <div id="menu">
+
+                <div id="menu-main" class="menu-screen">
+
+                    <div id="menu-title">
+                        <h1 class="bubilee">Bubilee</h1>
+                    </div>
+
+                    <button class="menu-button" onclick="onClickPlay();">Play</button>
+                    <button class="menu-button" onclick="changeToMenu('level-select');">Level Select</button>
+                    <button class="menu-button" onclick="changeToMenu('how-to-play');">How To Play</button>
+                    <button class="menu-button" onclick="changeToMenu('attributions');">Attributions</button>
+
+                </div>
+
+                <div id="menu-level-select" class="menu-screen">
+
+                    <h1 class="menu-header">Level Select</h1>
+
+                    <div class="two-grid">
+                        <div>
+                            <h2 style="text-align: center;">Level</h2>
+                            <input type="number" id="level-number-input" class="number-input" value="1" placeholder="Level number" min="1" max="50" required/>
+                        </div>
+                        <div>
+                            <h2 style="text-align: center;">ID</h2>
+                            <input type="number" id="level-id-input" class="number-input" value="0" placeholder="Level ID" min="0" max="9" required/>
+                        </div>
+                    </div>
+
+                    <button class="menu-button" onclick="onClickPlay(parseInt(element('level-number-input').value), parseInt(element('level-id-input').value));">Play</button>
+
+                </div>
+
+                <div id="menu-how-to-play" class="menu-screen">
+
+                    <h1 class="menu-header">How To Play</h1>
+
+                    <p>You must draw a line that traverses the tiles in a way that turns them all blue.</p>
+
+                    <p>White tiles must be traversed once; yellow tiles twice; pink tiles three times; purple tiles four times.</p>
+
+                    <p>You may not move your line in the same direction as you did on your last move.</p>
+
+                    <p>Your line may not be drawn across another line, though they may intersect.</p>
+
+                </div>
+
+                <div id="menu-attributions" class="menu-screen">
+
+                    <h1 class="menu-header">Attributions</h1>
+
+                    <p>Reddit icon was created by <a class="standard-link" href="https://www.flaticon.com/free-icon/reddit_2504934" target="_blank">Ruslan Babkin</a>.</p>
+
+                </div>
+
+                <div id="menu-pause" class="menu-screen">
+                    <h2 class="menu-header">Are you sure you want to exit?</h2>
+                    <button class="menu-button" onclick="onClickExit()">Yes</button>
+                    <button class="menu-button" onclick="element('menu').style.display = 'none';">No</button>
+                </div>
+
+                <div id="menu-end-screen" class="menu-screen">
+
+                    <h1 class="menu-header">Well done</h1>
+
+                    <p>You have reached the end of the game.</p>
+
+                    <button class="menu-button" onclick="onClickExit()">Yay</button>
+
+                </div>
+
+            </div>
+
+            <a id="reddit-link" href="https://www.reddit.com/r/bubilee/" target="_blank">
+                <span>Join the Subreddit</span>
+                <img class="icon" src="./res/reddit.svg" alt="Reddit icon"/>
+            </a>
+
+        </div>
+
+        <div id="right-pane" class="pane">
+            <h1><span class="label">Level</span> <span id="level-value" class="value"></span></h1>
+            <h1><span class="label">ID</span> <span id="level-id" class="value"></span></h1>
+        </div>
+
+        <script src="/scripts/level-data.js" charset="utf-8"></script>
+        <script src="/scripts/script.js" charset="utf-8"></script>
+
+    </body>
+</html>
