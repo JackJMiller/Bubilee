@@ -4,10 +4,9 @@ const canvas = element("game-canvas");
 const ctx = canvas.getContext("2d");
 const gameContainer = element("game-container");
 
-let GRID_WIDTH = 15;
-let GRID_HEIGHT = 15;
-let tileWidth = gameContainer.clientWidth / GRID_WIDTH;
-let tileHeight = gameContainer.clientHeight / GRID_HEIGHT;
+let gridWidth = 15;
+let gridHeight = 15;
+let tileSize = 0;
 let lineWidth = 0;
 
 canvas.width = canvas.clientWidth;
@@ -33,33 +32,27 @@ function getCanvasRowStyle(width) {
 }
 
 function resizeCanvas(width, height) {
-    tileWidth = 0.7 * window.innerWidth / GRID_WIDTH;
-    tileHeight = 0.8 * window.innerHeight / GRID_HEIGHT;
-    let tileSize = (tileWidth * width < tileHeight * height) ? tileWidth : tileHeight;
-    tileSize = Math.min(tileSize, 0.1 * window.innerHeight)
-    tileWidth = tileSize;
-    tileHeight = tileSize;
-    gameContainer.style.width = `${tileWidth * width}px`;
-    gameContainer.style.height = `${tileHeight * height}px`;
-    canvas.width = tileWidth * width;
-    canvas.height = tileHeight * height;
+    let tileWidth = 0.7 * window.innerWidth / gridWidth;
+    let tileHeight = 0.8 * window.innerHeight / gridHeight;
+    let size = (tileWidth * width < tileHeight * height) ? tileWidth : tileHeight;
+    tileSize = Math.min(size, 0.1 * window.innerHeight)
+    gameContainer.style.width = `${tileSize * width}px`;
+    gameContainer.style.height = `${tileSize * height}px`;
+    canvas.width = tileSize * width;
+    canvas.height = tileSize * height;
 }
 
 function createGrid(width, height) {
-    let rows = height;
-    let columns = width;
-    GRID_WIDTH = width;
-    GRID_HEIGHT = height;
     resizeCanvas(width, height);
-    lineWidth = tileWidth * 0.15;
+    lineWidth = tileSize * 0.15;
     halfLineWidth = lineWidth / 2;
-    let output = `<div id="grid" style="${getGridStyle(GRID_HEIGHT)}">`;
-    for (let row = 0; row < rows; row++) {
+    let output = `<div id="grid" style="${getGridStyle(height)}">`;
+    for (let row = 0; row < height; row++) {
         let rowString = "";
-        for (let column = 0; column < columns; column++) {
+        for (let column = 0; column < width; column++) {
             rowString = rowString + `<div onclick="clickTile(${column}, ${row})" id="${column}-${row}" class="canvas-tile"></div>`;
         }
-        rowString = `<div style="${getCanvasRowStyle(GRID_WIDTH)}">${rowString}</div>\n`;
+        rowString = `<div style="${getCanvasRowStyle(width)}">${rowString}</div>\n`;
         output = output + rowString;
     }
     output = output + "</div>"
@@ -75,12 +68,12 @@ function clickTile(x, y) {
     if (path.length > 1) {
         drawPath();
     }
-    if (++tilesClicked >= currentLevel.total) currentLevel = loadLevel(++levelNumber);
+    if (++tilesClicked >= currentLevel.total) loadLevel(++levelNumber);
 }
 
 function clickable(x, y) {
 
-    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) return false;
+    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) return false;
 
     let elem = element(`${x}-${y}`);
     if (elem.style.background === "var(--colour-tile-0)") return false;
@@ -129,8 +122,8 @@ function tilesAdjacent(x1, y1, x2, y2) {
 }
 
 function getCanvasPosition(tileX, tileY) {
-    let x = (tileX + 0.5) * tileWidth;
-    let y = (tileY + 0.5) * tileHeight;
+    let x = (tileX + 0.5) * tileSize;
+    let y = (tileY + 0.5) * tileSize;
     return { x, y };
 }
 
@@ -186,33 +179,43 @@ function loadLevel(number, id = -1) {
     }
     levelID = (id === -1) ? randint(0, 9) : id;
     levelRef = `${levelNumber}-${levelID}`;
-    console.log("Loading level " + levelRef);
-    element("level-value").innerHTML = levelNumber.toString();
-    element("level-id").innerHTML = levelID.toString();
+    updateInterface();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     path.splice(0);
     tilesClicked = 0;
-    let currentLevel = levelData[levelRef];
-    GRID_WIDTH = currentLevel.width;
-    GRID_HEIGHT = currentLevel.height;
-    createGrid(currentLevel.width, currentLevel.height);
-    for (let x = 0; x < GRID_WIDTH; x++) {
-        for (let y = 0; y < GRID_HEIGHT; y++) {
-            let elem = element(`${x}-${y}`);
-            let index = currentLevel.tiles.indexOf(`${x}-${y}`);
-            if (index === -1) {
-                elem.style.background = "var(--colour-unused-tile)";
-                elem.style.borderColor = "transparent";
-            }
-            else {
-                let counter = currentLevel.tileCounters[index];
-                elem.style.background = `var(--colour-tile-${counter})`;
-                elem.style.borderColor = "black";
-            }
+    currentLevel = levelData[levelRef];
+    gridWidth = currentLevel.width;
+    gridHeight = currentLevel.height;
+    createGrid(gridWidth, gridHeight);
+    loadInitialGrid();
+    console.log(`Level ${levelNumber} | ID ${levelID}`);
+}
+
+function loadInitialGrid() {
+    for (let x = 0; x < gridWidth; x++) {
+        for (let y = 0; y < gridHeight; y++) {
+            loadInitialTile(x, y);
         }
     }
-    console.log(`Level ${levelID}`);
-    return currentLevel;
+}
+
+function loadInitialTile(x, y) {
+    let elem = element(`${x}-${y}`);
+    let index = currentLevel.tiles.indexOf(`${x}-${y}`);
+    if (index === -1) {
+        elem.style.background = "var(--colour-unused-tile)";
+        elem.style.borderColor = "transparent";
+    }
+    else {
+        let counter = currentLevel.tileCounters[index];
+        elem.style.background = `var(--colour-tile-${counter})`;
+        elem.style.borderColor = "black";
+    }
+}
+
+function updateInterface() {
+    element("level-value").innerHTML = levelNumber.toString();
+    element("level-id").innerHTML = levelID.toString();
 }
 
 function onClickPlay(level = 1, id = NaN) {
@@ -220,7 +223,7 @@ function onClickPlay(level = 1, id = NaN) {
     if (isNaN(id)) id = randint(0, 9);
     levelNumber = level;
     levelID = id;
-    currentLevel = loadLevel(levelNumber, levelID);
+    loadLevel(levelNumber, levelID);
     element("menu-container").style.opacity = "0%";
     element("menu-container").style.display = "none";
     element("game-container").style.display = "block";
@@ -266,8 +269,8 @@ function onClickExit() {
 }
 
 canvas.addEventListener("click", e => {
-    let tileX = Math.floor(e.offsetX / tileWidth);
-    let tileY = Math.floor(e.offsetY / tileHeight);
+    let tileX = Math.floor(e.offsetX / tileSize);
+    let tileY = Math.floor(e.offsetY / tileSize);
     clickTile(tileX, tileY);
 });
 
